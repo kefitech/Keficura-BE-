@@ -1,0 +1,22 @@
+# FOR TENET MIGRATION
+
+python manage.py shell   -- first command
+from yourapp.models import Client, Domain  # replace 'yourapp' with your app name
+
+after opening the terminal paste this 
+# Create the tenant
+tenant = Client(
+    schema_name='tenant1',  # This becomes the Postgres schema name
+    name='Tenant One'
+)
+tenant.save()  # This creates the schema and runs migrations (if auto_create_schema is True)
+
+# Create the domain
+domain = Domain()
+domain.domain = 'tenant1.localhost'  # or 'tenant1.yourdomain.com'
+domain.tenant = tenant
+domain.is_primary = True
+domain.save()
+
+python manage.py migrate_schemas --tenant  # migrtion command
+
